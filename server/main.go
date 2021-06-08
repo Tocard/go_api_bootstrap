@@ -2,6 +2,7 @@ package server
 
 import (
 	"bytes"
+	"chia_api/handlers"
 	"encoding/json"
 	"github.com/go-martini/martini"
 	"io/ioutil"
@@ -13,8 +14,16 @@ func Healthz() string {
 	return "ok"
 }
 
+func Name() string {
+	return "French Farmers"
+}
+
 func Version() string {
 	return "0.0.0"
+}
+
+func Fees() string {
+	return "0.1"
 }
 
 // Log represent a log to save in mongo database.
@@ -50,11 +59,11 @@ func LogRequest(r *http.Request) {
 
 }
 
-
 func server() *martini.ClassicMartini {
 	app := martini.Classic()
 
 	app.Use(LogRequest)
+	app.Use(martini.Static("assets"))
 
 	// Allow CORS
 	app.Use(AcceptCORS)
@@ -65,7 +74,13 @@ func server() *martini.ClassicMartini {
 	// just to check api is responding
 	app.Get("/healthz", Healthz) // a "response checker"
 	app.Get("/version", Version)
-
+	app.Get("/name", Name)
+	app.Get("/fees", Fees)
+	app.Group("/farmer", func(r martini.Router) {
+		r.Get("/all", handlers.GetFarmers)
+		r.Get("/count", handlers.GetFarmersCount)
+		r.Get("/:launcher_id", handlers.GetFarmer)
+	})
 
 	return app
 }
