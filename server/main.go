@@ -10,22 +10,6 @@ import (
 	"time"
 )
 
-func Healthz() string {
-	return "ok"
-}
-
-func Name() string {
-	return "French Farmers"
-}
-
-func Version() string {
-	return "0.0.0"
-}
-
-func Fees() string {
-	return "0.1"
-}
-
 // Log represent a log to save in mongo database.
 type Log struct {
 	UserID uint
@@ -61,7 +45,8 @@ func LogRequest(r *http.Request) {
 
 func server() *martini.ClassicMartini {
 	app := martini.Classic()
-
+	//app.RunOnAddr(":" + data.API_PORT)
+	//app.RunOnAddr(":8080")
 	app.Use(LogRequest)
 	app.Use(martini.Static("assets"))
 
@@ -72,10 +57,11 @@ func server() *martini.ClassicMartini {
 	app.Use(AddJSONHeader)
 
 	// just to check api is responding
-	app.Get("/healthz", Healthz) // a "response checker"
-	app.Get("/version", Version)
-	app.Get("/name", Name)
-	app.Get("/fees", Fees)
+	app.Get("/healthz", handlers.Healthz) // a "response checker"
+	app.Get("/version", handlers.Version)
+	app.Get("/name", handlers.Name)
+	app.Get("/miningpoolstat", handlers.MiningPoolStat)
+	app.Get("/fees", handlers.Fees)
 	app.Group("/farmer", func(r martini.Router) {
 		r.Get("/all", handlers.GetFarmers)
 		r.Get("/count", handlers.GetFarmersCount)

@@ -17,11 +17,6 @@ type Farmer struct {
 	IsPoolMember                     bool   `gorm:"-" json:"is_pool_member"`
 }
 
-type FarmerCounter struct {
-	Model
-	Count int `gorm:"-" json:"count"`
-}
-
 // GetFarmer get farmer from launcher_id.
 func GetFarmer(LauncherId string) (*Farmer, error) {
 	db := GetConn()
