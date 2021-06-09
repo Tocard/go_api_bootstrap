@@ -9,7 +9,7 @@ type Farmer struct {
 	TargetPuzzleHash                 string `gorm:"-" json:"target_puzzle_hash"`
 	RelativeLockHeight               int    `gorm:"-" json:"relative_lock_height"`
 	P2SingletonPuzzleHash            string `gorm:"-" json:"p2_singleton_puzzle_hash"`
-	BlockchainHeight                 int    `gorm:"-" json:"blockchain_height"`
+	BlockchainHeight                 int    `gorm:"-" json:"blockcxhain_height"`
 	SingletonCoinId                  string `gorm:"-" json:"singleton_coin_id"`
 	Points                           int    `gorm:"-" json:"points"`
 	Difficulty                       int    `gorm:"-" json:"difficulty"`

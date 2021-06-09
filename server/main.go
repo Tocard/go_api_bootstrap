@@ -67,6 +67,10 @@ func server() *martini.ClassicMartini {
 		r.Get("/count", handlers.GetFarmersCount)
 		r.Get("/:launcher_id", handlers.GetFarmer)
 	})
+	app.Group("/partial", func(r martini.Router) {
+		r.Get("/all", handlers.GetPartials)
+		r.Get("/:launcher_id", handlers.GetPartial)
+	})
 
 	return app
 }
