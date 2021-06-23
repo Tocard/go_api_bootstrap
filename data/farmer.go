@@ -1,5 +1,7 @@
 package data
 
+import "fmt"
+
 type Farmer struct {
 	Model
 	LauncherId                       string `gorm:"-" json:"launcher_id"`
@@ -22,7 +24,8 @@ func GetFarmer(LauncherId string) (*Farmer, error) {
 	db := GetConn()
 	defer db.Close()
 	toreturn := Farmer{}
-	db.Raw("SELECT * FROM farmer where launcher_id = " + LauncherId).Scan(&toreturn)
+	fmt.Println("SELECT * FROM farmer where launcher_id=\"" + LauncherId + "\"")
+	db.Raw("SELECT * FROM farmer where launcher_id=\"" + LauncherId + "\"").Scan(&toreturn)
 	errs := db.GetErrors()
 	if len(errs) > 0 {
 		return nil, errs[0]
