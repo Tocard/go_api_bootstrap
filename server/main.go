@@ -66,10 +66,12 @@ func server() *martini.ClassicMartini {
 		r.Get("/all", handlers.GetFarmers)
 		r.Get("/count", handlers.GetFarmersCount)
 		r.Get("/:launcher_id", handlers.GetFarmer)
+		r.Post("/:launcher_id", handlers.PostFarmerDiscord)
 	})
 	app.Group("/partial", func(r martini.Router) {
 		r.Get("/all", handlers.GetPartials)
 		r.Get("/:launcher_id", handlers.GetPartial)
+		r.Post("/:launcher_id", handlers.PostPartialDiscord)
 	})
 
 	return app

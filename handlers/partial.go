@@ -30,7 +30,7 @@ func GetPartials() (int, string) {
 }
 
 // PostPartials get Partial.
-func PostPartial(params martini.Params) (int, string) {
+func PostPartialDiscord(params martini.Params) (int, string) {
 	u, err := data.GetPartial(params["launcher_id"])
 
 	wa, err := discordhook.NewWebhookAPI(857380040492056618, "did3j-_Sv_kKCkJQ8TbvndbzvAxTVVwL3jNXUOIlMoxz5VpHtpS5V7VngbzVk4uf6Utg", true, nil)
@@ -39,11 +39,9 @@ func PostPartial(params martini.Params) (int, string) {
 	}
 
 	_, err = wa.Execute(nil, &discordhook.WebhookExecuteParams{
-		Content: "Example text",
 		Embeds: []*discordhook.Embed{
 			{
-				Title:       "Hi there",
-				Description: "Un nouveau Miner nous rejoint sur le testnet,
+				Title:       "Un nouveau Partial soumis",
 			},
 		},
 	}, nil, "")
