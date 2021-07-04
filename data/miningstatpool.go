@@ -10,10 +10,6 @@ type MiningStatPool struct {
 			CurrentFeeType string  `json:"currentFeeType"`
 			CurrentFee     float64 `json:"currentFee"`
 		} `json:"poolStats"`
-		Xch struct {
-			Usdt float64 `json:"usdt"`
-			Btc  float64 `json:"btc"`
-		} `json:"xch"`
 	} `json:"data"`
 }
 
@@ -25,8 +21,7 @@ func GetMiningStatPool() (*MiningStatPool, error) {
 	toreturn.Data.PoolStats.CurrentFee = fees
 	toreturn.Data.PoolStats.CurrentFeeType = feestype
 	toreturn.Data.PoolStats.PoolSpaceTiB = 1.0
-	toreturn.Data.Xch.Btc = 0
-	toreturn.Data.Xch.Usdt = 0
-	toreturn.Data.LastBlocks = []string{"first", "second"}
+	toreturn.Data.LastBlocks = []string{}
+	toreturn.Status = "OK"
 	return &toreturn, nil
 }

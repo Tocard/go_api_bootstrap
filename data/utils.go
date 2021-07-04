@@ -1,7 +1,7 @@
 package data
 
 func GetFees() (float64, string) {
-	return 0.0001, "PPLNS"
+	return 0.001, "PPLNS"
 }
 
 func GetName() string {

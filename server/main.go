@@ -46,7 +46,7 @@ func LogRequest(r *http.Request) {
 func server() *martini.ClassicMartini {
 	app := martini.Classic()
 	//app.RunOnAddr(":" + data.API_PORT)
-	//app.RunOnAddr(":8080")
+	app.RunOnAddr(":8081")
 	app.Use(LogRequest)
 	app.Use(martini.Static("assets"))
 
