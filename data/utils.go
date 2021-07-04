@@ -1,7 +1,7 @@
 package data
 
-func GetFees() string {
-	return "0.001"
+func GetFees() (float64, string) {
+	return 0.0001, "PPLNS"
 }
 
 func GetName() string {
@@ -10,16 +10,4 @@ func GetName() string {
 
 func GetLogo() string {
 	return API_HOST + ":" + API_PORT + "/logo.svg"
-}
-
-func GetPower() string {
-	return "N/A"
-}
-
-func GetNetworkSize() string {
-	return "N/A"
-}
-
-func GetMode() string {
-	return "PPLNS"
 }

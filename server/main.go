@@ -61,7 +61,6 @@ func server() *martini.ClassicMartini {
 	app.Get("/version", handlers.Version)
 	app.Get("/name", handlers.Name)
 	app.Get("/miningpoolstat", handlers.MiningPoolStat)
-	app.Get("/fees", handlers.Fees)
 	app.Group("/farmer", func(r martini.Router) {
 		r.Get("/all", handlers.GetFarmers)
 		r.Get("/count", handlers.GetFarmersCount)

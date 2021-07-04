@@ -1,22 +1,32 @@
 package data
 
 type MiningStatPool struct {
-	Fee          string `gorm:"-" json:"Fees"`
-	FarmerOnline int    `gorm:"-" json:"farmer_online"`
-	Logo         string `gorm:"-" json:"logo"`
-	PoolName     string `gorm:"-" json:"pool_name"`
-	Power        string `gorm:"-" json:"power"`
-	Mode         string `gorm:"-" json:"mode"`
+	Status string `json:"status"`
+	Data   struct {
+		LastBlocks []string `json:"lastBlocks"`
+		PoolStats  struct {
+			PoolSpaceTiB   float64 `json:"poolSpaceTiB"`
+			Farmers        int     `json:"farmers"`
+			CurrentFeeType string  `json:"currentFeeType"`
+			CurrentFee     float64 `json:"currentFee"`
+		} `json:"poolStats"`
+		Xch struct {
+			Usdt float64 `json:"usdt"`
+			Btc  float64 `json:"btc"`
+		} `json:"xch"`
+	} `json:"data"`
 }
 
 // GetMiningStatPool return structure for minig stat pool
 func GetMiningStatPool() (*MiningStatPool, error) {
 	toreturn := MiningStatPool{}
-	toreturn.Fee = GetFees()
-	toreturn.FarmerOnline, _ = GetFarmersCount()
-	toreturn.Logo = GetLogo()
-	toreturn.PoolName = GetName()
-	toreturn.Power = GetPower()
-	toreturn.Mode = GetMode()
+	fees, feestype := GetFees()
+	toreturn.Data.PoolStats.Farmers, _ = GetFarmersCount()
+	toreturn.Data.PoolStats.CurrentFee = fees
+	toreturn.Data.PoolStats.CurrentFeeType = feestype
+	toreturn.Data.PoolStats.PoolSpaceTiB = 1.0
+	toreturn.Data.Xch.Btc = 0
+	toreturn.Data.Xch.Usdt = 0
+	toreturn.Data.LastBlocks = []string{"first", "second"}
 	return &toreturn, nil
 }
