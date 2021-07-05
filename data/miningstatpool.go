@@ -20,7 +20,8 @@ func GetMiningStatPool() (*MiningStatPool, error) {
 	toreturn.Data.PoolStats.Farmers, _ = GetFarmersCount()
 	toreturn.Data.PoolStats.CurrentFee = fees
 	toreturn.Data.PoolStats.CurrentFeeType = feestype
-	toreturn.Data.PoolStats.PoolSpaceTiB = 1.0
+	toreturn.Data.PoolStats.PoolSpaceTiB, _ = GetNetSpaceTotal()
+	toreturn.Data.PoolStats.PoolSpaceTiB *= 0.0000000000009094947
 	toreturn.Data.LastBlocks = []string{}
 	toreturn.Status = "OK"
 	return &toreturn, nil
