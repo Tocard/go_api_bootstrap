@@ -12,7 +12,7 @@ type Partial struct {
 	Difficulty int64  `gorm:"-" json:"difficulty"`
 }
 
-// getPartial get all partial
+// GetPartials get all partial
 func GetPartials() ([]*Partial, error) {
 	db := GetConn()
 	defer db.Close()
@@ -45,18 +45,21 @@ func GetNetSpaceByLauncherId(LauncherId string) (float64, error) {
 	defer db.Close()
 	toreturn := []*Partial{}
 	t := time.Now()
-	timeToCheck := int64(3600)
+	timeToCheck := int64(86400)
 	query := fmt.Sprintf("SELECT * FROM partial where launcher_id=\"%s\" AND timestamp >=%d", LauncherId, t.Unix()-timeToCheck)
 	db.Raw(query).Scan(&toreturn)
 	count := int64(len(toreturn))
-	averageDifficulty := int64(0)
+	averageDifficulty := float64(0)
 	for _, element := range toreturn {
-		averageDifficulty += element.Difficulty
+		averageDifficulty += float64(element.Difficulty)
 	}
 	size := float64(0)
 	if count > 0 {
-		averageDifficulty = averageDifficulty / count
-		size = float64(count) / (float64(timeToCheck) * (float64(averageDifficulty)) / 86400.00 / 106364865085.00)
+		averageDifficulty = averageDifficulty / float64(count)
+		size = float64(count) / (float64(timeToCheck) * ((10 / averageDifficulty) / 86400.00 / 106364865085.00))
+		debug1 := fmt.Sprintf("farmspace = %s, launcher_id %s diffifculty= %f, timetocheck= %d", lenReadable(int(size), 2, true), LauncherId, averageDifficulty, timeToCheck)
+		fmt.Println(debug1)
+
 	}
 	errs := db.GetErrors()
 	if len(errs) > 0 {
@@ -71,7 +74,7 @@ func GetNetSpaceTotal() (float64, error) {
 	defer db.Close()
 	partial := []*Partial{}
 	t := time.Now()
-	timeToCheck := int64(3600)
+	timeToCheck := int64(86400)
 	query := fmt.Sprintf("SELECT * FROM partial where timestamp >=%d", t.Unix()-timeToCheck)
 	db.Raw(query).Scan(&partial)
 	size := float64(0)
@@ -79,9 +82,12 @@ func GetNetSpaceTotal() (float64, error) {
 	for _, element := range partial {
 		launcherIds = append(launcherIds, element.LauncherId)
 	}
+	launcherIds = unique(launcherIds)
 	for _, launcherId := range launcherIds {
 		sizeTmp, _ := GetNetSpaceByLauncherId(launcherId)
 		size += sizeTmp
+		debug1 := fmt.Sprintf("total = %s", lenReadable(int(size), 2, true))
+		fmt.Println(debug1)
 	}
 	errs := db.GetErrors()
 	if len(errs) > 0 {
