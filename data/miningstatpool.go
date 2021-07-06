@@ -1,7 +1,10 @@
 package data
 
 import (
+	"io/ioutil"
+	"log"
 	"strconv"
+	"strings"
 )
 
 type MiningStatPool struct {
@@ -17,6 +20,19 @@ type MiningStatPool struct {
 	} `json:"data"`
 }
 
+func LoadFileSoloPlot() float64 {
+	content, err := ioutil.ReadFile("solo_plot.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Convert []byte to string and print to screen
+	text := string(content)
+	Stringfloat := strings.TrimSuffix(text, "\n")
+	soloNetspace, _ := strconv.ParseFloat(Stringfloat, 64)
+	return soloNetspace
+}
+
 // GetMiningStatPool return structure for minig stat pool
 func GetMiningStatPool() (*MiningStatPool, error) {
 	toreturn := MiningStatPool{}
@@ -26,6 +42,7 @@ func GetMiningStatPool() (*MiningStatPool, error) {
 	toreturn.Data.PoolStats.CurrentFeeType = feestype
 	NetSpace, _ := GetNetSpaceTotal()
 	toreturn.Data.PoolStats.PoolSpaceTiB, _ = strconv.ParseFloat(lenReadable(int(NetSpace), 2, false), 64)
+	toreturn.Data.PoolStats.PoolSpaceTiB += LoadFileSoloPlot()
 	toreturn.Data.LastBlocks = []string{}
 	toreturn.Status = "OK"
 	return &toreturn, nil
