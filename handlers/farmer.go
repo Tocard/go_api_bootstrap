@@ -42,7 +42,7 @@ func GetFarmersCount() (int, string) {
 
 // PostFarmerDiscord post to discord each new farmer from chia-pool
 func PostFarmerDiscord(params martini.Params) (int, string) {
-	u, err := data.GetFarmer(params["launcher_id"])
+	u := params["launcher_id"]
 
 	wa, err := discordhook.NewWebhookAPI(861291081143681074, "dKHd1iYI71H0rc1rPM1vBNPawdE_uhodXSqKLNDb53wYXP_Y-EcR3zihdjKo3ullMEWX", true, nil)
 	if err != nil {
@@ -53,7 +53,7 @@ func PostFarmerDiscord(params martini.Params) (int, string) {
 		Embeds: []*discordhook.Embed{
 			{
 				Title:       "Ici la French Farmer Pool",
-				Description: "Un nouveau Miner nous rejoint sur le testnet avec l'id " + u.LauncherId,
+				Description: "Un nouveau Miner nous rejoint sur le testnet avec l'id " + u,
 			},
 		},
 	}, nil, "")
