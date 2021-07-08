@@ -18,10 +18,6 @@ func Version() (int, string) {
 	return http.StatusOK, "0.0.0"
 }
 
-func Fees() (int, string) {
-	return http.StatusOK, data.GetFees()
-}
-
 func MiningPoolStat() (int, string) {
 	u, err := data.GetMiningStatPool()
 	if err != nil {

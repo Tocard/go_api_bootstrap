@@ -4,8 +4,8 @@ import (
 	"chia_api/data"
 	"encoding/json"
 	"github.com/go-martini/martini"
-	"net/http"
 	"github.com/nickname32/discordhook"
+	"net/http"
 )
 
 // GetFarmer get farmer.
@@ -42,25 +42,24 @@ func GetFarmersCount() (int, string) {
 
 // PostFarmerDiscord post to discord each new farmer from chia-pool
 func PostFarmerDiscord(params martini.Params) (int, string) {
-        u, err := data.GetFarmer(params["launcher_id"])
+	u := params["launcher_id"]
 
-        wa, err := discordhook.NewWebhookAPI(857380040492056618, "did3j-_Sv_kKCkJQ8TbvndbzvAxTVVwL3jNXUOIlMoxz5VpHtpS5V7VngbzVk4uf6Utg", true, nil)
-        if err != nil {
-                return http.StatusInternalServerError, err.Error()
-        }
+	wa, err := discordhook.NewWebhookAPI(861291081143681074, "dKHd1iYI71H0rc1rPM1vBNPawdE_uhodXSqKLNDb53wYXP_Y-EcR3zihdjKo3ullMEWX", true, nil)
+	if err != nil {
+		return http.StatusInternalServerError, err.Error()
+	}
 
-        _, err = wa.Execute(nil, &discordhook.WebhookExecuteParams{
-                Content: "L'equipe s'agrandit",
-                Embeds: []*discordhook.Embed{
-                        {
-                                Title:       "Ici la French Farmer Pool",
-                                Description: "Un nouveau Miner nous rejoint sur le testnet",
-                        },
-                },
-        }, nil, "")
-        if err != nil {
-                return http.StatusInternalServerError, err.Error()
-        }
-        d, _ := json.Marshal(u)
-        return http.StatusOK, string(d)
+	_, err = wa.Execute(nil, &discordhook.WebhookExecuteParams{
+		Embeds: []*discordhook.Embed{
+			{
+				Title:       "Ici la French Farmer Pool",
+				Description: "Un nouveau Miner nous rejoint sur le testnet avec l'id " + u,
+			},
+		},
+	}, nil, "")
+	if err != nil {
+		return http.StatusInternalServerError, err.Error()
+	}
+	d, _ := json.Marshal(u)
+	return http.StatusOK, string(d)
 }

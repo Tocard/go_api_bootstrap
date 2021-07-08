@@ -4,13 +4,33 @@ import (
 	"chia_api/data"
 	"encoding/json"
 	"github.com/go-martini/martini"
-	"net/http"
 	"github.com/nickname32/discordhook"
+	"net/http"
 )
 
 // GetPartial get Partial.
 func GetPartial(params martini.Params) (int, string) {
 	u, err := data.GetPartial(params["launcher_id"])
+	if err != nil {
+		return http.StatusInternalServerError, err.Error()
+	}
+	d, _ := json.Marshal(u)
+	return http.StatusOK, string(d)
+}
+
+// GetNetSpaceByLauncherId get netspace estimation from launcher_id.
+func GetNetSpaceByLauncherId(params martini.Params) (int, string) {
+	u, err := data.GetNetSpaceByLauncherId(params["launcher_id"])
+	if err != nil {
+		return http.StatusInternalServerError, err.Error()
+	}
+	d, _ := json.Marshal(u)
+	return http.StatusOK, string(d)
+}
+
+// GetNetSpaceTotal get netspace estimation .
+func GetNetSpaceTotal() (int, string) {
+	u, err := data.GetNetSpaceTotal()
 	if err != nil {
 		return http.StatusInternalServerError, err.Error()
 	}
@@ -33,7 +53,7 @@ func GetPartials() (int, string) {
 func PostPartialDiscord(params martini.Params) (int, string) {
 	u, err := data.GetPartial(params["launcher_id"])
 
-	wa, err := discordhook.NewWebhookAPI(857380040492056618, "did3j-_Sv_kKCkJQ8TbvndbzvAxTVVwL3jNXUOIlMoxz5VpHtpS5V7VngbzVk4uf6Utg", true, nil)
+	wa, err := discordhook.NewWebhookAPI(861291081143681074, "dKHd1iYI71H0rc1rPM1vBNPawdE_uhodXSqKLNDb53wYXP_Y-EcR3zihdjKo3ullMEWX", true, nil)
 	if err != nil {
 		return http.StatusInternalServerError, err.Error()
 	}
@@ -41,7 +61,7 @@ func PostPartialDiscord(params martini.Params) (int, string) {
 	_, err = wa.Execute(nil, &discordhook.WebhookExecuteParams{
 		Embeds: []*discordhook.Embed{
 			{
-				Title:       "Un nouveau Partial soumis",
+				Title: "Un nouveau Partial soumis",
 			},
 		},
 	}, nil, "")

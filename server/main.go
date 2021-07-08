@@ -45,8 +45,6 @@ func LogRequest(r *http.Request) {
 
 func server() *martini.ClassicMartini {
 	app := martini.Classic()
-	//app.RunOnAddr(":" + data.API_PORT)
-	//app.RunOnAddr(":8080")
 	app.Use(LogRequest)
 	app.Use(martini.Static("assets"))
 
@@ -61,7 +59,6 @@ func server() *martini.ClassicMartini {
 	app.Get("/version", handlers.Version)
 	app.Get("/name", handlers.Name)
 	app.Get("/miningpoolstat", handlers.MiningPoolStat)
-	app.Get("/fees", handlers.Fees)
 	app.Group("/farmer", func(r martini.Router) {
 		r.Get("/all", handlers.GetFarmers)
 		r.Get("/count", handlers.GetFarmersCount)
@@ -71,6 +68,8 @@ func server() *martini.ClassicMartini {
 	app.Group("/partial", func(r martini.Router) {
 		r.Get("/all", handlers.GetPartials)
 		r.Get("/:launcher_id", handlers.GetPartial)
+		r.Get("/netspace/total", handlers.GetNetSpaceTotal)
+		r.Get("/netspace/:launcher_id", handlers.GetNetSpaceByLauncherId)
 		r.Post("/:launcher_id", handlers.PostPartialDiscord)
 	})
 
