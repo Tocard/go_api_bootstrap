@@ -86,16 +86,22 @@ func PostPartialSoloplot(r *http.Request) (int, string) {
 	t := time.Now().Unix() - 3600
 	for _, soloFarmer := range res {
 		interval := 3600 / soloFarmer.Point
-		fmt.Println(soloFarmer)
-		for i := 0; i < soloFarmer.Point; i++ {
-			p := data.NewPArtial(soloFarmer.LauncherId, t+int64(interval), 1)
-			err := p.AddSoloPartial()
+		farmer, _ := data.GetFarmer(soloFarmer.LauncherId)
+		if farmer != nil {
+			farmer.Points += soloFarmer.Point
+			err := farmer.Save()
 			if err != nil {
 				return http.StatusServiceUnavailable, err.Error()
 			}
-			t += int64(interval)
+			for i := 0; i < soloFarmer.Point; i++ {
+				p := data.NewPArtial(soloFarmer.LauncherId, t+int64(interval), 1)
+				err := p.AddSoloPartial()
+				if err != nil {
+					return http.StatusServiceUnavailable, err.Error()
+				}
+				t += int64(interval)
+			}
 		}
-
 	}
 	return http.StatusNoContent, "ok"
 }

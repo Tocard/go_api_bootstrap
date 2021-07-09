@@ -30,6 +30,14 @@ func GetFarmer(LauncherId string) (*Farmer, error) {
 	return &toreturn, nil
 }
 
+// Save user
+func (f *Farmer) Save() error {
+	db := GetConn()
+	defer db.Close()
+	db = db.Save(f)
+	return db.Error
+}
+
 // GetFarmers get all farmer
 func GetTest(LauncherId string) (*Farmer, error) {
 	db := GetConn()

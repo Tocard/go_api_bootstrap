@@ -9,15 +9,22 @@ import (
 
 type MiningStatPool struct {
 	Status string `json:"status"`
-	Data   struct {
-		LastBlocks []string `json:"lastBlocks"`
-		PoolStats  struct {
-			PoolSpaceTiB   float64 `json:"poolSpaceTiB"`
-			Farmers        int     `json:"farmers"`
-			CurrentFeeType string  `json:"currentFeeType"`
-			CurrentFee     float64 `json:"currentFee"`
-		} `json:"poolStats"`
-	} `json:"data"`
+	Data   Data   `json:"data"`
+}
+
+type LastBlocks struct {
+	Height    int `json:"height"`
+	Timestamp int `json:"timestamp"`
+}
+type PoolStats struct {
+	PoolSpaceTiB   float64 `json:"poolSpaceTiB"`
+	Farmers        int     `json:"farmers"`
+	CurrentFeeType string  `json:"currentFeeType"`
+	CurrentFee     float64 `json:"currentFee"`
+}
+type Data struct {
+	LastBlocks []LastBlocks `json:"lastBlocks"`
+	PoolStats  PoolStats    `json:"poolStats"`
 }
 
 func LoadFileSoloPlot() float64 {
@@ -43,7 +50,7 @@ func GetMiningStatPool() (*MiningStatPool, error) {
 	NetSpace, _ := GetNetSpaceTotal()
 	toreturn.Data.PoolStats.PoolSpaceTiB, _ = strconv.ParseFloat(lenReadable(int(NetSpace), 2, false), 64)
 	toreturn.Data.PoolStats.PoolSpaceTiB += LoadFileSoloPlot()
-	toreturn.Data.LastBlocks = []string{"536606"}
+	toreturn.Data.LastBlocks = []LastBlocks{{Height: 536606, Timestamp: 1625640238}}
 	toreturn.Status = "OK"
 	return &toreturn, nil
 }
