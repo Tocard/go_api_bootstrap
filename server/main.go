@@ -58,7 +58,6 @@ func server() *martini.ClassicMartini {
 	// just to check api is responding
 	app.Get("/healthz", handlers.Healthz) // a "response checker"
 	app.Get("/version", handlers.Version)
-	app.Post("/login", handlers.Login)
 	app.Post("/generateAdmin/:launcher_id", handlers.GenerateAdmin)
 	app.Get("/name", handlers.Name)
 	app.Get("/miningpoolstat", handlers.MiningPoolStat)

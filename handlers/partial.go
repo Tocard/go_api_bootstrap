@@ -51,7 +51,7 @@ func GetPartials() (int, string) {
 	return http.StatusOK, string(d)
 }
 
-// PostPartials get Partial.
+// PostPartialDiscord post new partial on discord
 func PostPartialDiscord(params martini.Params) (int, string) {
 	u, err := data.GetPartial(params["launcher_id"])
 
@@ -74,22 +74,22 @@ func PostPartialDiscord(params martini.Params) (int, string) {
 	return http.StatusOK, string(d)
 }
 
-// GetPartials get Partial.
+// PostPartialSoloplot post solo plot on bdd share
 func PostPartialSoloplot(r *http.Request) (int, string) {
 
 	res := []data.SolotPlot{}
 	db := data.GetConn()
 	defer db.Close()
 	dec := json.NewDecoder(r.Body)
-	fmt.Println(r.Body)
 	dec.Decode(&res)
 	t := time.Now().Unix() - 3600
 	for _, soloFarmer := range res {
 		interval := 3600 / soloFarmer.Point
 		farmer, _ := data.GetFarmer(soloFarmer.LauncherId)
 		if farmer != nil {
+			fmt.Println(farmer.Points, soloFarmer.Point)
 			farmer.Points += soloFarmer.Point
-			err := farmer.Save()
+			err := data.UpdateFarmerPoint(farmer)
 			if err != nil {
 				return http.StatusServiceUnavailable, err.Error()
 			}
