@@ -6,7 +6,7 @@ import (
 
 type PoolAdmin struct {
 	Model
-	LauncherId  string `gorm:"launcher_di" json:"launcher_id"`
+	LauncherId  string `gorm:"launcher_id" json:"launcher_id"`
 	IsPoolAdmin bool   `gorm:"is_pool_admin" json:"is_pool_admin"`
 	IsPoolModo  bool   `gorm:"is_pool_modo" json:"is_pool_modo"`
 	Password    string `gorm:"password" json:"password"`
