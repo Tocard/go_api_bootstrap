@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"chia_api/handlers"
+	"chia_api/utils"
 	"encoding/json"
 	"github.com/go-martini/martini"
 	"io/ioutil"
@@ -57,8 +58,11 @@ func server() *martini.ClassicMartini {
 	// just to check api is responding
 	app.Get("/healthz", handlers.Healthz) // a "response checker"
 	app.Get("/version", handlers.Version)
+	app.Post("/login", handlers.Login)
+	app.Post("/generateAdmin/:launcher_id", handlers.GenerateAdmin)
 	app.Get("/name", handlers.Name)
 	app.Get("/miningpoolstat", handlers.MiningPoolStat)
+	app.Post("/login", handlers.Login)
 	app.Group("/farmer", func(r martini.Router) {
 		r.Get("/all", handlers.GetFarmers)
 		r.Get("/count", handlers.GetFarmersCount)
@@ -71,6 +75,8 @@ func server() *martini.ClassicMartini {
 		r.Get("/netspace/total", handlers.GetNetSpaceTotal)
 		r.Get("/netspace/:launcher_id", handlers.GetNetSpaceByLauncherId)
 		r.Post("/:launcher_id", handlers.PostPartialDiscord)
+		r.Post("/update/solo_plot", utils.Authorized, handlers.PostPartialSoloplot)
+
 	})
 
 	return app

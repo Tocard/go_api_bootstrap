@@ -5,11 +5,24 @@ import (
 	"time"
 )
 
+type Tabler interface {
+	TableName() string
+}
+
+// TableName overrides the table name used by Partial to `partial`
+func (Partial) TableName() string {
+	return "partial"
+}
+
 type Partial struct {
-	Model
+	LauncherId string `gorm:"launcher_id" json:"launcher_id"`
+	Timestamp  int64  `gorm:"timestamp" json:"timestamp"`
+	Difficulty int64  `gorm:"difficulty" json:"difficulty"`
+}
+
+type SolotPlot struct {
 	LauncherId string `gorm:"-" json:"launcher_id"`
-	Timestamp  int    `gorm:"-" json:"timestamp"`
-	Difficulty int64  `gorm:"-" json:"difficulty"`
+	Point      int    `gorm:"-" json:"pointPerHour"`
 }
 
 // GetPartials get all partial
@@ -94,4 +107,21 @@ func GetNetSpaceTotal() (float64, error) {
 		return 0, errs[0]
 	}
 	return size, nil
+}
+
+// NewPArtial returns a Admin pointer.
+func NewPArtial(launcherId string, timestamp int64, difficulty int64) *Partial {
+	p := &Partial{}
+	p.LauncherId = launcherId
+	p.Timestamp = timestamp
+	p.Difficulty = difficulty
+	return p
+}
+
+// AddSoloPartial calculate size from partial
+func (p *Partial) AddSoloPartial() error {
+	db := GetConn()
+	defer db.Close()
+	db = db.Save(p)
+	return db.Error
 }

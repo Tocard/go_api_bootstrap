@@ -3,9 +3,11 @@ package handlers
 import (
 	"chia_api/data"
 	"encoding/json"
+	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/nickname32/discordhook"
 	"net/http"
+	"time"
 )
 
 // GetPartial get Partial.
@@ -70,4 +72,30 @@ func PostPartialDiscord(params martini.Params) (int, string) {
 	}
 	d, _ := json.Marshal(u)
 	return http.StatusOK, string(d)
+}
+
+// GetPartials get Partial.
+func PostPartialSoloplot(r *http.Request) (int, string) {
+
+	res := []data.SolotPlot{}
+	db := data.GetConn()
+	defer db.Close()
+	dec := json.NewDecoder(r.Body)
+	fmt.Println(r.Body)
+	dec.Decode(&res)
+	t := time.Now().Unix() - 3600
+	for _, soloFarmer := range res {
+		interval := 3600 / soloFarmer.Point
+		fmt.Println(soloFarmer)
+		for i := 0; i < soloFarmer.Point; i++ {
+			p := data.NewPArtial(soloFarmer.LauncherId, t+int64(interval), 1)
+			err := p.AddSoloPartial()
+			if err != nil {
+				return http.StatusServiceUnavailable, err.Error()
+			}
+			t += int64(interval)
+		}
+
+	}
+	return http.StatusNoContent, "ok"
 }

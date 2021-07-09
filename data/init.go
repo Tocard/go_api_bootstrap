@@ -37,7 +37,7 @@ func Migrate() {
 	db := GetConn()
 	defer db.Close()
 	db.AutoMigrate(
-		&Farmer{},
+		&Farmer{}, &PoolAdmin{}, &Partial{},
 	)
 }
 
