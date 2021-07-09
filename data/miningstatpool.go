@@ -43,7 +43,7 @@ func GetMiningStatPool() (*MiningStatPool, error) {
 	NetSpace, _ := GetNetSpaceTotal()
 	toreturn.Data.PoolStats.PoolSpaceTiB, _ = strconv.ParseFloat(lenReadable(int(NetSpace), 2, false), 64)
 	toreturn.Data.PoolStats.PoolSpaceTiB += LoadFileSoloPlot()
-	toreturn.Data.LastBlocks = []string{}
+	toreturn.Data.LastBlocks = []string{"536606"}
 	toreturn.Status = "OK"
 	return &toreturn, nil
 }
