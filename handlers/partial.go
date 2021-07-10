@@ -41,7 +41,7 @@ func GetNetSpaceTotal() (int, string) {
 }
 
 // GetpointTotal from pool
-func GetpointTotal() (int, string) {
+func GetTotalPoint() (int, string) {
 	u, err := data.GetTotalPoint()
 	if err != nil {
 		return http.StatusInternalServerError, err.Error()
