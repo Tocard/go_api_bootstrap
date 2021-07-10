@@ -56,11 +56,4 @@ func Version() (int, string) {
 	return http.StatusOK, "0.0.0"
 }
 
-func MiningPoolStat() (int, string) {
-	u, err := data.GetMiningStatPool()
-	if err != nil {
-		return http.StatusInternalServerError, err.Error()
-	}
-	d, _ := json.Marshal(u)
-	return http.StatusOK, string(d)
-}
+

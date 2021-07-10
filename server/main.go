@@ -61,6 +61,7 @@ func server() *martini.ClassicMartini {
 	app.Post("/generateAdmin/:launcher_id", handlers.GenerateAdmin)
 	app.Get("/name", handlers.Name)
 	app.Get("/miningpoolstat", handlers.MiningPoolStat)
+	app.Get("/pool_infos", handlers.PoolStat)
 	app.Post("/login", handlers.Login)
 	app.Group("/farmer", func(r martini.Router) {
 		r.Get("/all", handlers.GetFarmers)

@@ -122,6 +122,16 @@ func GetTotalPoint() (int, error) {
 	return points, nil
 }
 
+// GetPoints Value
+func GetValuePoint() (float64, error) {
+	var points int
+	points, _ = GetTotalPoint()
+	var value float64
+	value = float64(1750000000000 / points)
+
+	return value, nil
+}
+
 // NewPArtial returns a Admin pointer.
 func NewPArtial(launcherId string, timestamp int64, difficulty int64) *Partial {
 	p := &Partial{}

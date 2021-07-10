@@ -6,8 +6,9 @@ import (
 	"net/http"
 )
 
-func MiningPoolStat() (int, string) {
-	u, err := data.GetMiningStatPool()
+//Get basic pool info
+func PoolStat() (int, string) {
+	u, err := data.GetPoolInfo()
 	if err != nil {
 		return http.StatusInternalServerError, err.Error()
 	}
