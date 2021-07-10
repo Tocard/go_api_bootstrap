@@ -1,10 +1,8 @@
 package data
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 	"log"
-	"strings"
 	"time"
 
 	// import the entire database drivers
@@ -37,12 +35,13 @@ func Migrate() {
 	db := GetConn()
 	defer db.Close()
 	db.AutoMigrate(
-		&Farmer{},
+		&Farmer{}, &PoolAdmin{}, &Partial{},
 	)
 }
 
 func GetConn() *gorm.DB {
 	DB, err := gorm.Open(DB_DRIVER, buildDBPath())
+	DB.SingularTable(true)
 	for err != nil {
 		time.Sleep(1 * time.Second)
 		DB, err = gorm.Open(DB_DRIVER, buildDBPath())
@@ -64,14 +63,5 @@ func GetConn() *gorm.DB {
 
 func buildDBPath() string {
 	path := DB_PATH
-	switch strings.ToUpper(DB_DRIVER) {
-	case "MYSQL":
-		path = fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?charset=utf8&parseTime=True&loc=Local",
-			DB_USER,
-			DB_PASSWORD,
-			DB_HOST,
-			DB_PATH,
-		)
-	}
 	return path
 }
