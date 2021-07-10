@@ -114,7 +114,7 @@ func GetTotalPoint() (int, error) {
 	db := GetConn()
 	defer db.Close()
 	var points int
-	db.Raw("SELECT SUM(points) FROM farmers").Scan(&points)
+	db.Raw("SELECT SUM(points) FROM farmer").Row().Scan(&points)
 	errs := db.GetErrors()
 	if len(errs) > 0 {
 		return 0, errs[0]
