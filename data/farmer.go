@@ -60,6 +60,19 @@ func GetFarmers() ([]*Farmer, error) {
 }
 
 // GetFarmers get all farmer
+func GetTopFarmers() ([]*Farmer, error) {
+	db := GetConn()
+	defer db.Close()
+	toreturn := []*Farmer{}
+	db.Raw("SELECT * FROM farmer ORDER BY points DESC LIMIT 10").Scan(&toreturn)
+	errs := db.GetErrors()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	return toreturn, nil
+}
+
+// GetFarmers get all farmer
 func GetFarmersCount() (int, error) {
 	db := GetConn()
 	defer db.Close()
