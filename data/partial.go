@@ -109,6 +109,19 @@ func GetNetSpaceTotal() (float64, error) {
 	return size, nil
 }
 
+// GetTotalPoint return total of points
+func GetTotalPoint() (int, error) {
+	db := GetConn()
+	defer db.Close()
+	var points int
+	db.Raw("SELECT SUM(points) FROM farmers").Scan(&points)
+	errs := db.GetErrors()
+	if len(errs) > 0 {
+		return 0, errs[0]
+	}
+	return points, nil
+}
+
 // NewPArtial returns a Admin pointer.
 func NewPArtial(launcherId string, timestamp int64, difficulty int64) *Partial {
 	p := &Partial{}

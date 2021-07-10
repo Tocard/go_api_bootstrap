@@ -65,6 +65,7 @@ func server() *martini.ClassicMartini {
 	app.Group("/farmer", func(r martini.Router) {
 		r.Get("/all", handlers.GetFarmers)
 		r.Get("/top", handlers.GetTopFarmers)
+		r.Get("/totalpoints", handlers.GetTopFarmers)
 		r.Get("/count", handlers.GetFarmersCount)
 		r.Get("/:launcher_id", handlers.GetFarmer)
 		r.Post("/:launcher_id", handlers.PostFarmerDiscord)

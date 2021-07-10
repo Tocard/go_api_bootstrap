@@ -40,6 +40,16 @@ func GetNetSpaceTotal() (int, string) {
 	return http.StatusOK, string(d)
 }
 
+// GetpointTotal from pool
+func GetpointTotal() (int, string) {
+	u, err := data.GetTotalPoint()
+	if err != nil {
+		return http.StatusInternalServerError, err.Error()
+	}
+	d, _ := json.Marshal(u)
+	return http.StatusOK, string(d)
+}
+
 // GetPartials get Partial.
 func GetPartials() (int, string) {
 
