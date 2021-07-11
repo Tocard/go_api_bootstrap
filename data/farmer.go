@@ -1,11 +1,6 @@
 package data
 
 
-import (
-	"strconv"
-)
-
-
 // TableName overrides the table name used by User to `profiles`
 func (Farmer) TableName() string {
 	return "farmer"
@@ -35,7 +30,7 @@ func GetFarmer(LauncherId string) (*Farmer, error) {
 	db.Raw("SELECT * FROM farmer where launcher_id=\"" + LauncherId + "\"").Scan(&toreturn)
 	errs := db.GetErrors()
 	Netspace, _ := GetNetSpaceByLauncherId(LauncherId)
-	toreturn.FarmerNetSpace, _ = strconv.ParseFloat(lenReadable(int(Netspace), 2, false), 64)
+	toreturn.FarmerNetSpace = Netspace
 	toreturn.LastSeen, _ = GetLastSeen(LauncherId)
 
 	if len(errs) > 0 {
