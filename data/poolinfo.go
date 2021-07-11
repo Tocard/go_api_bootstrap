@@ -1,9 +1,5 @@
 package data
 
-import (
-	"strconv"
-)
-
 
 type PoolInfo struct {
 	Status string `json:"status"`
@@ -28,8 +24,7 @@ func GetPoolInfo() (*PoolInfo, error) {
 	toreturn.Data.Farmers, _ = GetFarmersCount()
 	toreturn.Data.CurrentFee = fees
 	toreturn.Data.CurrentFeeType = feestype
-	NetSpace, _ := GetNetSpaceTotal()
-	toreturn.Data.PoolSpaceTiB, _ = strconv.ParseFloat(lenReadable(int(NetSpace), 2, false), 64)
+	toreturn.Data.PoolSpaceTiB, _ = GetNetSpaceTotal()
 	toreturn.Data.PoolSpaceTiB += LoadFileSoloPlot()
 	toreturn.Data.LastBlocks = []LastBlocks{{Height: 536606, Timestamp: 1625640238}}
 	toreturn.Data.TotalPoints, _ = GetTotalPoint()
