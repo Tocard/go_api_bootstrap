@@ -57,6 +57,9 @@ func GetFarmers() ([]*Farmer, error) {
 	defer db.Close()
 	toreturn := []*Farmer{}
 	db.Raw("SELECT * FROM farmer").Scan(&toreturn)
+	for _, element := range toreturn {
+		element.FarmerNetSpace, _ = GetNetSpaceByLauncherId(element.LauncherId)
+	}
 	errs := db.GetErrors()
 	if len(errs) > 0 {
 		return nil, errs[0]
