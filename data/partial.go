@@ -73,7 +73,7 @@ func GetNetSpaceByLauncherId(LauncherId string) (float64, error) {
 	defer db.Close()
 	toreturn := []*Partial{}
 	t := time.Now()
-	timeToCheck := int64(21600)
+	timeToCheck := int64(43200)
 	query := fmt.Sprintf("SELECT * FROM partial where launcher_id=\"%s\" AND timestamp >=%d", LauncherId, t.Unix()-timeToCheck)
 	db.Raw(query).Scan(&toreturn)
 	count := int64(len(toreturn))
@@ -84,7 +84,7 @@ func GetNetSpaceByLauncherId(LauncherId string) (float64, error) {
 	size := float64(0)
 	if count > 0 {
 		averageDifficulty = averageDifficulty / float64(count)
-		size = (float64(count) / (float64(timeToCheck) * ((2.5 / averageDifficulty) / 21600 / 106364865085.00))) / 1099511627776
+		size = (float64(count) / (float64(timeToCheck) * ((5 / averageDifficulty) / 43200 / 106364865085.00))) / 1099511627776
 	}
 	errs := db.GetErrors()
 	if len(errs) > 0 {

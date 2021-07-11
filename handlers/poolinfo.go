@@ -13,6 +13,6 @@ func PoolStat() (int, string) {
 		return http.StatusInternalServerError, err.Error()
 	}
 	d, _ := json.Marshal(u)
-	
+
 	return http.StatusOK, string(d)
 }
