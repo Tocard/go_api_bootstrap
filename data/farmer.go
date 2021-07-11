@@ -88,7 +88,7 @@ func GetFarmersCount() (int, error) {
 	db := GetConn()
 	defer db.Close()
 	var toreturn int
-	db.Table("farmer").Count(&toreturn)
+	db.Table("farmer").Where("points >", 1).Count(&toreturn)
 	errs := db.GetErrors()
 	if len(errs) > 0 {
 		return toreturn, errs[0]
