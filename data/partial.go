@@ -38,6 +38,21 @@ func GetPartials() ([]*Partial, error) {
 	return toreturn, nil
 }
 
+// Last seen from launcher_id.
+func GetLastSeen(LauncherId string) (int64, error) {
+	db := GetConn()
+	defer db.Close()
+	var toreturn int64
+	fmt.Println()
+	db.Raw("SELECT timestamp FROM partial where launcher_id=\"" + LauncherId + "\" ORDER BY timestamp DESC LIMIT 1").Row().Scan(&toreturn)
+
+	errs := db.GetErrors()
+	if len(errs) > 0 {
+		return 0, errs[0]
+	}
+	return toreturn, nil
+}
+
 // GetPartial get partial from launcher_id.
 func GetPartial(LauncherId string) ([]*Partial, error) {
 	db := GetConn()

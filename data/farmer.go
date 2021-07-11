@@ -1,5 +1,11 @@
 package data
 
+
+import (
+	"strconv"
+)
+
+
 // TableName overrides the table name used by User to `profiles`
 func (Farmer) TableName() string {
 	return "farmer"
@@ -7,18 +13,18 @@ func (Farmer) TableName() string {
 
 type Farmer struct {
 	LauncherId                       string `gorm:"launcher_id" json:"launcher_id"`
-	AuthenticationPublicKey          string `gorm:"authentication_public_key" json:"authentication_public_key"`
-	AuthenticationPublicKeyTimestamp int    `gorm:"authentication_public_key_timestamp" json:"authentication_public_key_timestamp"`
-	OwnerPublicKey                   string `gorm:"owner_public_key" json:"owner_public_key"`
-	TargetPuzzleHash                 string `gorm:"target_puzzle_hash" json:"target_puzzle_hash"`
-	RelativeLockHeight               int    `gorm:"relative_lock_height" json:"relative_lock_height"`
 	P2SingletonPuzzleHash            string `gorm:"p2_singleton_puzzle_hash" json:"p2_singleton_puzzle_hash"`
-	BlockchainHeight                 int    `gorm:"blockchain_height" json:"blockchain_height"`
-	SingletonCoinId                  string `gorm:"singleton_coin_id" json:"singleton_coin_id"`
+	DelayTime            			 int64 `gorm:"delay_time" json:"delay_time"`
+	DelayPuzzleHash                  string `gorm:"delay_puzzle_hash" json:"delay_puzzle_hash"`
+	AuthenticationPublicKey          string `gorm:"authentication_public_key" json:"authentication_public_key"`
+	SingletonTip                     []byte `gorm:"singleton_tip" json:"singleton_tip"`
+	SingletonTipState                []byte `gorm:"singleton_tip_state" json:"singleton_tip_state"`
 	Points                           int    `gorm:"points" json:"points"`
 	Difficulty                       int    `gorm:"difficulty" json:"difficulty"`
-	PoolPayoutInstructions           string `gorm:"pool_payout_instructions" json:"pool_payout_instructions"`
+	PayoutInstructions               string `gorm:"payout_instructions" json:"payout_instructions"`
 	IsPoolMember                     bool   `gorm:"is_pool_member" json:"is_pool_member"`
+	FarmerNetSpace                   float64  `gorm:"farmer_netspace" json:"farmer_netspace"`
+	LastSeen						 int64  `gorm:"farmer_lastseen" json:"farmer_lastseen"`
 }
 
 // GetFarmer get farmer from launcher_id.
@@ -28,6 +34,10 @@ func GetFarmer(LauncherId string) (*Farmer, error) {
 	toreturn := Farmer{}
 	db.Raw("SELECT * FROM farmer where launcher_id=\"" + LauncherId + "\"").Scan(&toreturn)
 	errs := db.GetErrors()
+	Netspace, _ := GetNetSpaceByLauncherId(LauncherId)
+	toreturn.FarmerNetSpace, _ = strconv.ParseFloat(lenReadable(int(Netspace), 2, false), 64)
+	toreturn.LastSeen, _ = GetLastSeen(LauncherId)
+
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
