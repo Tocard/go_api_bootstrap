@@ -2,9 +2,36 @@ package main
 
 import (
 	"chia_api/data"
+	"chia_api/redis"
 	"chia_api/server"
 	"flag"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"log"
 )
+
+type Config struct {
+	RedisHost     string `yaml:"host"`
+	RedisPort     int    `yaml:"port"`
+	RedisPassword string `yaml:"password"`
+	RedisLifetime int    `yaml:"lifetime"`
+}
+
+func getConf() {
+	c := &Config{}
+	yamlFile, err := ioutil.ReadFile("redis_config.yaml")
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
+	}
+	err = yaml.Unmarshal(yamlFile, c)
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
+	}
+	redis.Host = c.RedisHost
+	redis.Password = c.RedisPassword
+	redis.Port = c.RedisPort
+	redis.Lifetime = c.RedisLifetime
+}
 
 func main() {
 	var bddType string
@@ -38,5 +65,6 @@ func main() {
 	data.API_HOST = apiHost
 
 	//data.Migrate()
+	//getConf()
 	server.GetServer().Run()
 }

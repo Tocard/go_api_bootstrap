@@ -1,25 +1,24 @@
 package data
 
-
 // TableName overrides the table name used by User to `profiles`
 func (Farmer) TableName() string {
 	return "farmer"
 }
 
 type Farmer struct {
-	LauncherId                       string `gorm:"launcher_id" json:"launcher_id"`
-	P2SingletonPuzzleHash            string `gorm:"p2_singleton_puzzle_hash" json:"p2_singleton_puzzle_hash"`
-	DelayTime            			 int64 `gorm:"delay_time" json:"delay_time"`
-	DelayPuzzleHash                  string `gorm:"delay_puzzle_hash" json:"delay_puzzle_hash"`
-	AuthenticationPublicKey          string `gorm:"authentication_public_key" json:"authentication_public_key"`
-	SingletonTip                     []byte `gorm:"singleton_tip" json:"singleton_tip"`
-	SingletonTipState                []byte `gorm:"singleton_tip_state" json:"singleton_tip_state"`
-	Points                           int    `gorm:"points" json:"points"`
-	Difficulty                       int    `gorm:"difficulty" json:"difficulty"`
-	PayoutInstructions               string `gorm:"payout_instructions" json:"payout_instructions"`
-	IsPoolMember                     bool   `gorm:"is_pool_member" json:"is_pool_member"`
-	FarmerNetSpace                   float64  `gorm:"farmer_netspace" json:"farmer_netspace"`
-	LastSeen						 int64  `gorm:"farmer_lastseen" json:"farmer_lastseen"`
+	LauncherId              string  `gorm:"launcher_id" json:"launcher_id"`
+	P2SingletonPuzzleHash   string  `gorm:"p2_singleton_puzzle_hash" json:"p2_singleton_puzzle_hash"`
+	DelayTime               int64   `gorm:"delay_time" json:"delay_time"`
+	DelayPuzzleHash         string  `gorm:"delay_puzzle_hash" json:"delay_puzzle_hash"`
+	AuthenticationPublicKey string  `gorm:"authentication_public_key" json:"authentication_public_key"`
+	SingletonTip            []byte  `gorm:"singleton_tip" json:"singleton_tip"`
+	SingletonTipState       []byte  `gorm:"singleton_tip_state" json:"singleton_tip_state"`
+	Points                  int     `gorm:"points" json:"points"`
+	Difficulty              int     `gorm:"difficulty" json:"difficulty"`
+	PayoutInstructions      string  `gorm:"payout_instructions" json:"payout_instructions"`
+	IsPoolMember            bool    `gorm:"is_pool_member" json:"is_pool_member"`
+	FarmerNetSpace          float64 `gorm:"farmer_netspace" json:"farmer_netspace"`
+	LastSeen                int64   `gorm:"farmer_lastseen" json:"farmer_lastseen"`
 }
 
 // GetFarmer get farmer from launcher_id.
