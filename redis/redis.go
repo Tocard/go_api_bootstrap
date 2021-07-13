@@ -44,7 +44,7 @@ func connect(DbNum int) {
 }
 
 func WriteToRedis(DbNum int, key, value string) {
-	Clis[DbNum].Set(key, value, time.Duration(Lifetime)).Err() //TODO: Ajouter du logging et gestion d'erreur
+	Clis[DbNum].Set(key, value, time.Duration(Lifetime)*time.Second).Err() //TODO: Ajouter du logging et gestion d'erreur
 }
 
 func GetFromToRedis(DbNum int, key string) string {
