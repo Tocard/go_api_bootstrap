@@ -66,7 +66,7 @@ func GetFarmers() ([]*Farmer, error) {
 	return toreturn, nil
 }
 
-// GetFarmers get all farmer
+// GetFarmers top farmer
 func GetTopFarmers() ([]*Farmer, error) {
 	db := GetConn()
 	defer db.Close()
