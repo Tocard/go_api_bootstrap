@@ -29,6 +29,16 @@ func GetFarmers() (int, string) {
 	return http.StatusOK, string(d)
 }
 
+// GetFarmers top get farmer.
+func GetTopFarmers() (int, string) {
+	u, err := data.GetTopFarmers()
+	if err != nil {
+		return http.StatusInternalServerError, err.Error()
+	}
+	d, _ := json.Marshal(u)
+	return http.StatusOK, string(d)
+}
+
 // GetFarmersCount get farmer.
 func GetFarmersCount() (int, string) {
 

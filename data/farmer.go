@@ -1,20 +1,25 @@
 package data
 
+
+// TableName overrides the table name used by User to `profiles`
+func (Farmer) TableName() string {
+	return "farmer"
+}
+
 type Farmer struct {
-	Model
-	LauncherId                       string `gorm:"-" json:"launcher_id"`
-	AuthenticationPublicKey          string `gorm:"-" json:"authentication_public_key"`
-	AuthenticationPublicKeyTimestamp int    `gorm:"-" json:"authentication_public_key_timestamp"`
-	OwnerPublicKey                   string `gorm:"-" json:"owner_public_key"`
-	TargetPuzzleHash                 string `gorm:"-" json:"target_puzzle_hash"`
-	RelativeLockHeight               int    `gorm:"-" json:"relative_lock_height"`
-	P2SingletonPuzzleHash            string `gorm:"-" json:"p2_singleton_puzzle_hash"`
-	BlockchainHeight                 int    `gorm:"-" json:"blockcxhain_height"`
-	SingletonCoinId                  string `gorm:"-" json:"singleton_coin_id"`
-	Points                           int    `gorm:"-" json:"points"`
-	Difficulty                       int    `gorm:"-" json:"difficulty"`
-	PoolPayoutInstructions           string `gorm:"-" json:"pool_payout_instructions"`
-	IsPoolMember                     bool   `gorm:"-" json:"is_pool_member"`
+	LauncherId                       string `gorm:"launcher_id" json:"launcher_id"`
+	P2SingletonPuzzleHash            string `gorm:"p2_singleton_puzzle_hash" json:"p2_singleton_puzzle_hash"`
+	DelayTime            			 int64 `gorm:"delay_time" json:"delay_time"`
+	DelayPuzzleHash                  string `gorm:"delay_puzzle_hash" json:"delay_puzzle_hash"`
+	AuthenticationPublicKey          string `gorm:"authentication_public_key" json:"authentication_public_key"`
+	SingletonTip                     []byte `gorm:"singleton_tip" json:"singleton_tip"`
+	SingletonTipState                []byte `gorm:"singleton_tip_state" json:"singleton_tip_state"`
+	Points                           int    `gorm:"points" json:"points"`
+	Difficulty                       int    `gorm:"difficulty" json:"difficulty"`
+	PayoutInstructions               string `gorm:"payout_instructions" json:"payout_instructions"`
+	IsPoolMember                     bool   `gorm:"is_pool_member" json:"is_pool_member"`
+	FarmerNetSpace                   float64  `gorm:"farmer_netspace" json:"farmer_netspace"`
+	LastSeen						 int64  `gorm:"farmer_lastseen" json:"farmer_lastseen"`
 }
 
 // GetFarmer get farmer from launcher_id.
@@ -24,23 +29,26 @@ func GetFarmer(LauncherId string) (*Farmer, error) {
 	toreturn := Farmer{}
 	db.Raw("SELECT * FROM farmer where launcher_id=\"" + LauncherId + "\"").Scan(&toreturn)
 	errs := db.GetErrors()
+	Netspace, _ := GetNetSpaceByLauncherId(LauncherId)
+	toreturn.FarmerNetSpace = Netspace
+	toreturn.LastSeen, _ = GetLastSeen(LauncherId)
+
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
 	return &toreturn, nil
 }
 
-// GetFarmers get all farmer
-func GetTest(LauncherId string) (*Farmer, error) {
+// UpdateFarmerPoint update points of user
+func UpdateFarmerPoint(farmer *Farmer) error {
 	db := GetConn()
 	defer db.Close()
-	toreturn := &Farmer{}
-	db.Where("launcher_id = ?", LauncherId).Find(&toreturn)
+	db.Model(&Farmer{}).Where("launcher_id = ?", farmer.LauncherId).Update("points", farmer.Points)
 	errs := db.GetErrors()
 	if len(errs) > 0 {
-		return nil, errs[0]
+		return errs[0]
 	}
-	return toreturn, nil
+	return nil
 }
 
 // GetFarmers get all farmer
@@ -49,6 +57,25 @@ func GetFarmers() ([]*Farmer, error) {
 	defer db.Close()
 	toreturn := []*Farmer{}
 	db.Raw("SELECT * FROM farmer").Scan(&toreturn)
+	for _, element := range toreturn {
+		element.FarmerNetSpace, _ = GetNetSpaceByLauncherId(element.LauncherId)
+	}
+	errs := db.GetErrors()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	return toreturn, nil
+}
+
+// GetFarmers get all farmer
+func GetTopFarmers() ([]*Farmer, error) {
+	db := GetConn()
+	defer db.Close()
+	toreturn := []*Farmer{}
+	db.Raw("SELECT * FROM farmer ORDER BY points DESC LIMIT 10").Scan(&toreturn)
+	for _, element := range toreturn {
+		element.FarmerNetSpace, _ = GetNetSpaceByLauncherId(element.LauncherId)
+	}
 	errs := db.GetErrors()
 	if len(errs) > 0 {
 		return nil, errs[0]
@@ -61,7 +88,7 @@ func GetFarmersCount() (int, error) {
 	db := GetConn()
 	defer db.Close()
 	var toreturn int
-	db.Table("farmer").Count(&toreturn)
+	db.Table("farmer").Where("points > ?", "0").Count(&toreturn)
 	errs := db.GetErrors()
 	if len(errs) > 0 {
 		return toreturn, errs[0]
