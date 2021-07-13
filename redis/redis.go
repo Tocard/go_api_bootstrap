@@ -13,7 +13,7 @@ var (
 	Port     = 6379
 	Password = ""
 	Clis     = make(map[int]*redis.Client, 2)
-	Lifetime = 600
+	Lifetime = 60
 )
 
 func init() {
