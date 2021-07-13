@@ -3,6 +3,8 @@ package data
 import (
 	"fmt"
 	"time"
+	"chia_api/redis"
+	"chia_api/utils"
 )
 
 // GetNetSpaceByLauncherId calculate size from partial share
@@ -36,6 +38,13 @@ func GetNetSpaceByLauncherId(LauncherId string) (float64, error) {
 func GetNetSpaceTotal() (float64, error) {
 	db := GetConn()
 	defer db.Close()
+
+	redisValue := redis.GetFromToRedis(0, "netspacetotal")
+	redisNetspace := utils.StringToFloat(redisValue)
+	if redisNetspace != 0.0 {
+		return redisNetspace, nil
+	}
+
 	partial := []*Partial{}
 	t := time.Now()
 	timeToCheck := int64(21600)
@@ -55,5 +64,8 @@ func GetNetSpaceTotal() (float64, error) {
 	if len(errs) > 0 {
 		return 0, errs[0]
 	}
+
+	redis.WriteToRedis(0, "netspacetotal", utils.FloatToString(size))
+
 	return size, nil
 }
