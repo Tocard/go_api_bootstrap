@@ -12,12 +12,6 @@ func GetNetSpaceByLauncherId(LauncherId string) (float64, error) {
 	db := GetConn()
 	defer db.Close()
 
-	redisValue := redis.GetFromToRedis(0, "netspace:"+LauncherId)
-	redisNetspace := utils.StringToFloat(redisValue)
-	if redisNetspace != 0.0 {
-		return redisNetspace, nil
-	}
-
 	toreturn := []*Partial{}
 	t := time.Now()
 	timeToCheck := int64(43200)

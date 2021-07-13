@@ -71,6 +71,7 @@ func GetTopFarmers() ([]*Farmer, error) {
 	db := GetConn()
 	defer db.Close()
 	toreturn := []*Farmer{}
+
 	db.Raw("SELECT * FROM farmer ORDER BY points DESC LIMIT 10").Scan(&toreturn)
 	for _, element := range toreturn {
 		element.FarmerNetSpace, _ = GetNetSpaceByLauncherId(element.LauncherId)
