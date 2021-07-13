@@ -14,7 +14,7 @@ type Farmer struct {
 	SingletonTip            []byte  `gorm:"singleton_tip" json:"singleton_tip"`
 	SingletonTipState       []byte  `gorm:"singleton_tip_state" json:"singleton_tip_state"`
 	Points                  int     `gorm:"points" json:"points"`
-	Difficulty              int     `gorm:"difficulty" json:"difficulty"`
+	//Difficulty              int     `gorm:"difficulty" json:"difficulty"`
 	PayoutInstructions      string  `gorm:"payout_instructions" json:"payout_instructions"`
 	IsPoolMember            bool    `gorm:"is_pool_member" json:"is_pool_member"`
 	FarmerNetSpace          float64 `gorm:"farmer_netspace" json:"farmer_netspace"`
