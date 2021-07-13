@@ -14,7 +14,7 @@ func GetNetSpaceByLauncherId(params martini.Params) (int, string) {
 	launcherId, _ := params["launcher_id"]
 	redisValue := redis.GetFromToRedis(0, launcherId)
 	redisNetspace := utils.StringToFloat(redisValue)
-	if redisNetspace != "" {
+	if redisNetspace != 0.0 {
 		d, _ := json.Marshal(redisNetspace)
 		return http.StatusOK, string(d)
 	}
