@@ -64,7 +64,6 @@ func main() {
 	data.API_PORT = apiPort
 	data.API_HOST = apiHost
 
-	//data.Migrate()
-	//getConf()
+	data.Migrate()
 	server.GetServer().Run()
 }

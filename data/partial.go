@@ -19,11 +19,6 @@ type Partial struct {
 	Difficulty int64  `gorm:"difficulty" json:"difficulty"`
 }
 
-type SolotPlot struct {
-	LauncherId string `gorm:"-" json:"launcher_id"`
-	Point      int    `gorm:"-" json:"pointPerHour"`
-}
-
 // GetPartials get all partial
 func GetPartials() ([]*Partial, error) {
 	db := GetConn()
@@ -37,7 +32,7 @@ func GetPartials() ([]*Partial, error) {
 	return toreturn, nil
 }
 
-// Last seen from launcher_id.
+// GetLastSeen Last seen from launcher_id.
 func GetLastSeen(LauncherId string) (int64, error) {
 	db := GetConn()
 	defer db.Close()
@@ -57,7 +52,6 @@ func GetPartial(LauncherId string) ([]*Partial, error) {
 	db := GetConn()
 	defer db.Close()
 	toreturn := []*Partial{}
-	fmt.Println()
 	db.Raw("SELECT * FROM partial where launcher_id=\"" + LauncherId + "\"").Scan(&toreturn)
 	errs := db.GetErrors()
 	if len(errs) > 0 {
@@ -66,31 +60,8 @@ func GetPartial(LauncherId string) ([]*Partial, error) {
 	return toreturn, nil
 }
 
-// GetTotalPoint return total of points
-func GetTotalPoint() (int, error) {
-	db := GetConn()
-	defer db.Close()
-	var points int
-	db.Raw("SELECT SUM(points) FROM farmer").Row().Scan(&points)
-	errs := db.GetErrors()
-	if len(errs) > 0 {
-		return 0, errs[0]
-	}
-	return points, nil
-}
-
-// GetPoints Value
-func GetValuePoint() (float64, error) {
-	var points int
-	points, _ = GetTotalPoint()
-	var value float64
-	value = float64(1750000000000 / points)
-
-	return value, nil
-}
-
-// NewPArtial returns a Admin pointer.
-func NewPArtial(launcherId string, timestamp int64, difficulty int64) *Partial {
+// NewPartial returns a NewPartial pointer.
+func NewPartial(launcherId string, timestamp int64, difficulty int64) *Partial {
 	p := &Partial{}
 	p.LauncherId = launcherId
 	p.Timestamp = timestamp

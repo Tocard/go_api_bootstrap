@@ -13,8 +13,8 @@ type Farmer struct {
 	AuthenticationPublicKey string  `gorm:"authentication_public_key" json:"authentication_public_key"`
 	SingletonTip            []byte  `gorm:"singleton_tip" json:"singleton_tip"`
 	SingletonTipState       []byte  `gorm:"singleton_tip_state" json:"singleton_tip_state"`
-	Points                  int     `gorm:"points" json:"points"`
-	//Difficulty              int     `gorm:"difficulty" json:"difficulty"`
+	Points                  float64 `gorm:"points" json:"points"`
+	Difficulty              int64   `gorm:"difficulty" json:"difficulty"`
 	PayoutInstructions      string  `gorm:"payout_instructions" json:"payout_instructions"`
 	IsPoolMember            bool    `gorm:"is_pool_member" json:"is_pool_member"`
 	FarmerNetSpace          float64 `gorm:"farmer_netspace" json:"farmer_netspace"`
@@ -38,18 +38,6 @@ func GetFarmer(LauncherId string) (*Farmer, error) {
 	return &toreturn, nil
 }
 
-// UpdateFarmerPoint update points of user
-func UpdateFarmerPoint(farmer *Farmer) error {
-	db := GetConn()
-	defer db.Close()
-	db.Model(&Farmer{}).Where("launcher_id = ?", farmer.LauncherId).Update("points", farmer.Points)
-	errs := db.GetErrors()
-	if len(errs) > 0 {
-		return errs[0]
-	}
-	return nil
-}
-
 // GetFarmers get all farmer
 func GetFarmers() ([]*Farmer, error) {
 	db := GetConn()
@@ -66,7 +54,7 @@ func GetFarmers() ([]*Farmer, error) {
 	return toreturn, nil
 }
 
-// GetFarmers top farmer
+// GetTopFarmers return top 10 farmer
 func GetTopFarmers() ([]*Farmer, error) {
 	db := GetConn()
 	defer db.Close()
@@ -83,7 +71,7 @@ func GetTopFarmers() ([]*Farmer, error) {
 	return toreturn, nil
 }
 
-// GetFarmers get all farmer
+// GetFarmersCount return nbr of farmer
 func GetFarmersCount() (int, error) {
 	db := GetConn()
 	defer db.Close()
