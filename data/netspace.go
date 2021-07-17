@@ -1,10 +1,10 @@
 package data
 
 import (
-	"chia_api/redis"
-	"chia_api/utils"
 	"fmt"
 	"time"
+	"chia_api/redis"
+	"chia_api/utils"
 )
 
 // GetNetSpaceByLauncherId calculate size from partial share
@@ -27,6 +27,7 @@ func GetNetSpaceByLauncherId(LauncherId string) (float64, error) {
 		averageDifficulty = averageDifficulty / float64(count)
 		size = (float64(count) / (float64(timeToCheck) * ((5 / averageDifficulty) / 43200 / 106364865085.00))) / 1099511627776
 	}
+	fmt.Printf("db %f\n", size)
 	errs := db.GetErrors()
 	if len(errs) > 0 {
 		return 0, errs[0]
