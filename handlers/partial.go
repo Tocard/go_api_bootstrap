@@ -83,7 +83,7 @@ func PostPartialSoloplot(r *http.Request) (int, string) {
 			if err != nil {
 				return http.StatusServiceUnavailable, err.Error()
 			}
-			for i := 0; i < soloFarmer.Point; i++ {
+			for i := 0.0; i < soloFarmer.Point; i++ {
 				p := data.NewPArtial(soloFarmer.LauncherId, t+int64(interval), 1)
 				err := p.AddSoloPartial()
 				if err != nil {

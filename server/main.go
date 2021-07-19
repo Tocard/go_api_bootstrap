@@ -67,6 +67,7 @@ func server() *martini.ClassicMartini {
 		r.Get("/top", handlers.GetTopFarmers)
 		r.Get("/totalpoints", handlers.GetTotalPoint)
 		r.Get("/count", handlers.GetFarmersCount)
+		r.Get("/puzzle/:p2_singleton_puzzle_hash", handlers.GetFarmerFromP2SingletonPuzzleHash)
 		r.Get("/:launcher_id", handlers.GetFarmer)
 		r.Post("/:launcher_id", handlers.PostFarmerDiscord)
 	})
