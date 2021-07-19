@@ -2,6 +2,9 @@ package redis
 
 import (
 	"fmt"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"log"
 	"strconv"
 	"time"
 
@@ -9,15 +12,40 @@ import (
 )
 
 var (
-	Host     = "localhost"
+	Host     = "should_never_be_seen"
 	Port     = 6379
 	Password = ""
 	Clis     = make(map[int]*redis.Client, 2)
 	Lifetime = 60
 )
 
+type Config struct {
+	RedisHost     string `yaml:"host"`
+	RedisPort     int    `yaml:"port"`
+	RedisPassword string `yaml:"password"`
+	RedisLifetime int    `yaml:"lifetime"`
+}
+
+func getRedisConf() {
+	c := &Config{}
+	yamlFile, err := ioutil.ReadFile("redis_config.yaml")
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
+	}
+	err = yaml.Unmarshal(yamlFile, c)
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
+	}
+	Host = c.RedisHost
+	Password = c.RedisPassword
+	Port = c.RedisPort
+	Lifetime = c.RedisLifetime
+	fmt.Println(Host, c)
+}
+
 func init() {
 
+	getRedisConf()
 	connect(0)
 	go func() {
 		for {
