@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/nickname32/discordhook"
-	"math"
 	"net/http"
 	"time"
 )
@@ -75,32 +74,22 @@ func PostPartialSoloplot(r *http.Request) (int, string) {
 	dec.Decode(&res)
 	t := time.Now().Unix() - 3600
 	for _, soloFarmer := range res {
-		interval := int64(3600 / soloFarmer.Point)
+		interval := 3600 / soloFarmer.Point
 		farmer, _ := data.GetFarmer(soloFarmer.LauncherId)
-		nbrShare := float64(farmer.Difficulty) * 0.001 * soloFarmer.Point
-		partPartial, _ := data.GetFloatingPartial(farmer.LauncherId)
-		nbrShare += partPartial.PartialPart
-		partial, rest := math.Modf(nbrShare)
-		f := data.NewFloatingPartial(farmer.LauncherId, rest)
-		f.Save()
-		err := data.UpdateFloatingPartial(f.LauncherId, f.PartialPart)
-		fmt.Printf("launcher_id: %s nbrshare: %f partial: %f rest: %f with diff: %d", f.LauncherId, nbrShare, partial, rest, farmer.Difficulty)
-		if err != nil {
-			return http.StatusInternalServerError, err.Error()
-		}
 		if farmer != nil {
+			fmt.Println(farmer.Points, soloFarmer.Point)
 			farmer.Points += soloFarmer.Point
 			err := data.UpdateFarmerPoint(farmer)
 			if err != nil {
 				return http.StatusServiceUnavailable, err.Error()
 			}
-			for i := 0; i < int(partial); i++ {
-				p := data.NewPartial(soloFarmer.LauncherId, t+interval, farmer.Difficulty)
+			for i := 0; i < soloFarmer.Point; i++ {
+				p := data.NewPArtial(soloFarmer.LauncherId, t+int64(interval), 1)
 				err := p.AddSoloPartial()
 				if err != nil {
 					return http.StatusServiceUnavailable, err.Error()
 				}
-				t += interval
+				t += int64(interval)
 			}
 		}
 	}

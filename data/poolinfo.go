@@ -1,20 +1,23 @@
 package data
 
+
 type PoolInfo struct {
 	Status string `json:"status"`
-	Data   Pool   `json:"data"`
+	Data DataPool `json:"data"`
 }
-type Pool struct {
-	LastBlocks     []LastBlocks `json:"lastBlocks"`
-	PoolSpaceTiB   float64      `json:"poolSpaceTiB"`
-	Farmers        int          `json:"farmers"`
-	CurrentFeeType string       `json:"currentFeeType"`
-	CurrentFee     float64      `json:"currentFee"`
-	TotalPoints    float64      `json:"totalPoints"`
-	PointValue     float64      `json:"pointValue"`
+type DataPool struct {
+	LastBlocks []LastBlocks `json:"lastBlocks"`
+	PoolSpaceTiB   float64 `json:"poolSpaceTiB"`
+	Farmers        int     `json:"farmers"`
+	CurrentFeeType string  `json:"currentFeeType"`
+	CurrentFee     float64 `json:"currentFee"`
+	TotalPoints    int `json:"totalPoints"`
+	PointValue 	   float64 `json:"pointValue"`
 }
 
-// GetPoolInfo return structure TODO: @FLUOR !!!!
+
+
+// GetMiningStatPool return structure for minig stat pool
 func GetPoolInfo() (*PoolInfo, error) {
 	toreturn := PoolInfo{}
 	fees, feestype := GetFees()
@@ -30,3 +33,5 @@ func GetPoolInfo() (*PoolInfo, error) {
 
 	return &toreturn, nil
 }
+
+
