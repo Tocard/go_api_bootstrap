@@ -1,13 +1,5 @@
 package data
 
-import (
-	"io/ioutil"
-	"log"
-	"strconv"
-	"strings"
-)
-
-
 type MiningStatPool struct {
 	Status string `json:"status"`
 	Data   Data   `json:"data"`
@@ -26,20 +18,6 @@ type PoolStats struct {
 type Data struct {
 	LastBlocks []LastBlocks `json:"lastBlocks"`
 	PoolStats  PoolStats    `json:"poolStats"`
-}
-
-
-func LoadFileSoloPlot() float64 {
-	content, err := ioutil.ReadFile("solo_plot.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Convert []byte to string and print to screen
-	text := string(content)
-	Stringfloat := strings.TrimSuffix(text, "\n")
-	soloNetspace, _ := strconv.ParseFloat(Stringfloat, 64)
-	return soloNetspace
 }
 
 // GetMiningStatPool return structure for minig stat pool

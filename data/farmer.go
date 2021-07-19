@@ -6,19 +6,19 @@ func (Farmer) TableName() string {
 }
 
 type Farmer struct {
-	LauncherId              string  `gorm:"launcher_id" json:"launcher_id"`
-	P2SingletonPuzzleHash   string  `gorm:"p2_singleton_puzzle_hash" json:"p2_singleton_puzzle_hash"`
-	DelayTime               int64   `gorm:"delay_time" json:"delay_time"`
-	DelayPuzzleHash         string  `gorm:"delay_puzzle_hash" json:"delay_puzzle_hash"`
-	AuthenticationPublicKey string  `gorm:"authentication_public_key" json:"authentication_public_key"`
-	SingletonTip            []byte  `gorm:"singleton_tip" json:"singleton_tip"`
-	SingletonTipState       []byte  `gorm:"singleton_tip_state" json:"singleton_tip_state"`
-	Points                  int     `gorm:"points" json:"points"`
+	LauncherId              string `gorm:"launcher_id" json:"launcher_id"`
+	P2SingletonPuzzleHash   string `gorm:"p2_singleton_puzzle_hash" json:"p2_singleton_puzzle_hash"`
+	DelayTime               int64  `gorm:"delay_time" json:"delay_time"`
+	DelayPuzzleHash         string `gorm:"delay_puzzle_hash" json:"delay_puzzle_hash"`
+	AuthenticationPublicKey string `gorm:"authentication_public_key" json:"authentication_public_key"`
+	SingletonTip            []byte `gorm:"singleton_tip" json:"singleton_tip"`
+	SingletonTipState       []byte `gorm:"singleton_tip_state" json:"singleton_tip_state"`
+	Points                  int    `gorm:"points" json:"points"`
 	//Difficulty              int     `gorm:"difficulty" json:"difficulty"`
-	PayoutInstructions      string  `gorm:"payout_instructions" json:"payout_instructions"`
-	IsPoolMember            bool    `gorm:"is_pool_member" json:"is_pool_member"`
-	FarmerNetSpace          float64 `gorm:"farmer_netspace" json:"farmer_netspace"`
-	LastSeen                int64   `gorm:"farmer_lastseen" json:"farmer_lastseen"`
+	PayoutInstructions string  `gorm:"payout_instructions" json:"payout_instructions"`
+	IsPoolMember       bool    `gorm:"is_pool_member" json:"is_pool_member"`
+	FarmerNetSpace     float64 `gorm:"farmer_netspace" json:"farmer_netspace"`
+	LastSeen           int64   `gorm:"farmer_lastseen" json:"farmer_lastseen"`
 }
 
 // GetFarmer get farmer from launcher_id.
@@ -36,18 +36,6 @@ func GetFarmer(LauncherId string) (*Farmer, error) {
 		return nil, errs[0]
 	}
 	return &toreturn, nil
-}
-
-// UpdateFarmerPoint update points of user
-func UpdateFarmerPoint(farmer *Farmer) error {
-	db := GetConn()
-	defer db.Close()
-	db.Model(&Farmer{}).Where("launcher_id = ?", farmer.LauncherId).Update("points", farmer.Points)
-	errs := db.GetErrors()
-	if len(errs) > 0 {
-		return errs[0]
-	}
-	return nil
 }
 
 // GetFarmers get all farmer

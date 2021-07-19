@@ -19,11 +19,6 @@ type Partial struct {
 	Difficulty int64  `gorm:"difficulty" json:"difficulty"`
 }
 
-type SolotPlot struct {
-	LauncherId string `gorm:"-" json:"launcher_id"`
-	Point      int    `gorm:"-" json:"pointPerHour"`
-}
-
 // GetPartials get all partial
 func GetPartials() ([]*Partial, error) {
 	db := GetConn()
@@ -64,29 +59,6 @@ func GetPartial(LauncherId string) ([]*Partial, error) {
 		return nil, errs[0]
 	}
 	return toreturn, nil
-}
-
-// GetTotalPoint return total of points
-func GetTotalPoint() (int, error) {
-	db := GetConn()
-	defer db.Close()
-	var points int
-	db.Raw("SELECT SUM(points) FROM farmer").Row().Scan(&points)
-	errs := db.GetErrors()
-	if len(errs) > 0 {
-		return 0, errs[0]
-	}
-	return points, nil
-}
-
-// GetPoints Value
-func GetValuePoint() (float64, error) {
-	var points int
-	points, _ = GetTotalPoint()
-	var value float64
-	value = float64(1750000000000 / points)
-
-	return value, nil
 }
 
 // NewPArtial returns a Admin pointer.
