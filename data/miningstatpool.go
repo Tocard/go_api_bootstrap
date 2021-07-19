@@ -51,7 +51,7 @@ func GetMiningStatPool() (*MiningStatPool, error) {
 	toreturn.Data.PoolStats.CurrentFeeType = feestype
 	toreturn.Data.PoolStats.PoolSpaceTiB, _ = GetNetSpaceTotal()
 	toreturn.Data.PoolStats.PoolSpaceTiB += LoadFileSoloPlot()
-	toreturn.Data.LastBlocks = []LastBlocks{{Height: 536606, Timestamp: 1625640238}}
+	toreturn.Data.LastBlocks = []LastBlocks{{Height: 585001, Timestamp: 1626533952}}
 	toreturn.Status = "OK"
 	return &toreturn, nil
 }

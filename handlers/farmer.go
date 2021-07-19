@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"chia_api/data"
+	"chia_api/redis"
 	"encoding/json"
 	"github.com/go-martini/martini"
 	"github.com/nickname32/discordhook"
@@ -31,12 +32,18 @@ func GetFarmers() (int, string) {
 
 // GetFarmers top get farmer.
 func GetTopFarmers() (int, string) {
-	u, err := data.GetTopFarmers()
-	if err != nil {
-		return http.StatusInternalServerError, err.Error()
+	redisTop := redis.GetFromToRedis(0, "topFarmer")
+	if redisTop != "" {
+		return http.StatusOK, string(redisTop)
+	}else{
+		u, err := data.GetTopFarmers()
+		if err != nil {
+			return http.StatusInternalServerError, err.Error()
+		}
+		d, _ := json.Marshal(u)
+		redis.WriteToRedis(0, "topFarmer",  string(d))
+		return http.StatusOK, string(d)
 	}
-	d, _ := json.Marshal(u)
-	return http.StatusOK, string(d)
 }
 
 // GetFarmersCount get farmer.

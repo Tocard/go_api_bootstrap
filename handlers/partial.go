@@ -20,26 +20,6 @@ func GetPartial(params martini.Params) (int, string) {
 	return http.StatusOK, string(d)
 }
 
-// GetNetSpaceByLauncherId get netspace estimation from launcher_id.
-func GetNetSpaceByLauncherId(params martini.Params) (int, string) {
-	u, err := data.GetNetSpaceByLauncherId(params["launcher_id"])
-	if err != nil {
-		return http.StatusInternalServerError, err.Error()
-	}
-	d, _ := json.Marshal(u)
-	return http.StatusOK, string(d)
-}
-
-// GetNetSpaceTotal get netspace estimation .
-func GetNetSpaceTotal() (int, string) {
-	u, err := data.GetNetSpaceTotal()
-	if err != nil {
-		return http.StatusInternalServerError, err.Error()
-	}
-	d, _ := json.Marshal(u)
-	return http.StatusOK, string(d)
-}
-
 // GetpointTotal from pool
 func GetTotalPoint() (int, string) {
 	u, err := data.GetTotalPoint()

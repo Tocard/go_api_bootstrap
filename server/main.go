@@ -3,7 +3,6 @@ package server
 import (
 	"bytes"
 	"chia_api/handlers"
-	"chia_api/utils"
 	"encoding/json"
 	"github.com/go-martini/martini"
 	"io/ioutil"
@@ -77,7 +76,7 @@ func server() *martini.ClassicMartini {
 		r.Get("/netspace/total", handlers.GetNetSpaceTotal)
 		r.Get("/netspace/:launcher_id", handlers.GetNetSpaceByLauncherId)
 		r.Post("/:launcher_id", handlers.PostPartialDiscord)
-		r.Post("/update/solo_plot", utils.Authorized, handlers.PostPartialSoloplot)
+		r.Post("/update/solo_plot", handlers.PostPartialSoloplot)
 
 	})
 
