@@ -4,7 +4,6 @@ import (
 	"chia_api/data"
 	"chia_api/redis"
 	"encoding/json"
-	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/nickname32/discordhook"
 	"net/http"
@@ -16,7 +15,6 @@ func GetFarmer(params martini.Params) (int, string) {
 	if launcherId[0] == '0' && launcherId[1] == 'x' {
 		launcherId = launcherId[2:]
 	}
-	fmt.Println(launcherId)
 	u, err := data.GetFarmer(launcherId)
 	if err != nil {
 		return http.StatusInternalServerError, err.Error()

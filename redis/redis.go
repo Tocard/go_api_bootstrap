@@ -32,7 +32,6 @@ func init() {
 	}()
 }
 func connect(DbNum int) {
-	fmt.Println(Host, Port)
 	Clis[DbNum] = redis.NewClient(&redis.Options{
 		Addr:        Host + ":" + strconv.Itoa(Port),
 		Password:    Password, // no password set

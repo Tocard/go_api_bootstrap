@@ -3,7 +3,6 @@ package handlers
 import (
 	"chia_api/data"
 	"encoding/json"
-	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/nickname32/discordhook"
 	"net/http"
@@ -85,7 +84,6 @@ func PostPartialSoloplot(r *http.Request) (int, string) {
 		interval := 3600 / soloFarmer.Point
 		farmer, _ := data.GetFarmer(soloFarmer.LauncherId)
 		if farmer != nil {
-			fmt.Println(farmer.Points, soloFarmer.Point)
 			farmer.Points += soloFarmer.Point
 			err := data.UpdateFarmerPoint(farmer)
 			if err != nil {
