@@ -1,14 +1,17 @@
 package handlers
 
 import (
-	"github.com/go-martini/martini"
+	"chia_api/data"
+	"encoding/json"
 	"github.com/nickname32/discordhook"
 	"net/http"
 )
 
 // PostNewBlock post new block on discord
-func PostNewBlock(params martini.Params) (int, string) {
-
+func PostNewBlock(r *http.Request) (int, string) {
+	block := data.WinBlock{}
+	dec := json.NewDecoder(r.Body)
+	err := dec.Decode(&block)
 	wa, err := discordhook.NewWebhookAPI(861291081143681074, "dKHd1iYI71H0rc1rPM1vBNPawdE_uhodXSqKLNDb53wYXP_Y-EcR3zihdjKo3ullMEWX", true, nil)
 	if err != nil {
 		return http.StatusInternalServerError, err.Error()

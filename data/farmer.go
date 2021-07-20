@@ -99,3 +99,17 @@ func GetFarmerFromP2SingletonPuzzleHash(P2SingletonPuzzleHash string) (string, e
 	}
 	return toreturn.P2SingletonPuzzleHash, nil
 }
+
+// GetFarmerFromRewardAdress get farmer from puzzlehash.
+func GetFarmerFromRewardAdress(rewardAdress string) (string, error) {
+	db := GetConn()
+	defer db.Close()
+	toreturn := Farmer{}
+	query := fmt.Sprintf("payout_instructions=\"%s\" AND is_pool_member=1", rewardAdress)
+	db.Table("farmer").Where(query).Scan(&toreturn)
+	errs := db.GetErrors()
+	if len(errs) > 0 {
+		return "", errs[0]
+	}
+	return toreturn.P2SingletonPuzzleHash, nil
+}

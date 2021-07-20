@@ -80,6 +80,10 @@ func server() *martini.ClassicMartini {
 		r.Post("/update/solo_plot", handlers.PostPartialSoloplot)
 
 	})
+	app.Group("/block", func(r martini.Router) {
+		r.Post("/new_block_discord", handlers.PostNewBlock)
+
+	})
 
 	return app
 }
