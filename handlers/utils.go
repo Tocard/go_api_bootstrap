@@ -4,7 +4,6 @@ import (
 	"chia_api/data"
 	"chia_api/utils"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 )
@@ -17,7 +16,6 @@ func Login(r *http.Request) (int, string) {
 	db := data.GetConn()
 	defer db.Close()
 	dec := json.NewDecoder(r.Body)
-	fmt.Println(r.Body)
 	dec.Decode(&where)
 
 	if len(strings.TrimSpace(where.LauncherId)) == 0 {
@@ -55,5 +53,3 @@ func Name() (int, string) {
 func Version() (int, string) {
 	return http.StatusOK, "0.0.0"
 }
-
-

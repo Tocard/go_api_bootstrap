@@ -1,5 +1,7 @@
 package data
 
+import "fmt"
+
 // TableName overrides the table name used by User to `profiles`
 func (Farmer) TableName() string {
 	return "farmer"
@@ -13,8 +15,8 @@ type Farmer struct {
 	AuthenticationPublicKey string  `gorm:"authentication_public_key" json:"authentication_public_key"`
 	SingletonTip            []byte  `gorm:"singleton_tip" json:"singleton_tip"`
 	SingletonTipState       []byte  `gorm:"singleton_tip_state" json:"singleton_tip_state"`
-	Points                  int     `gorm:"points" json:"points"`
-	//Difficulty              int     `gorm:"difficulty" json:"difficulty"`
+	Points                  float64 `gorm:"points" json:"points"`
+	Difficulty              int     `gorm:"difficulty" json:"difficulty"`
 	PayoutInstructions      string  `gorm:"payout_instructions" json:"payout_instructions"`
 	IsPoolMember            bool    `gorm:"is_pool_member" json:"is_pool_member"`
 	FarmerNetSpace          float64 `gorm:"farmer_netspace" json:"farmer_netspace"`
@@ -38,18 +40,6 @@ func GetFarmer(LauncherId string) (*Farmer, error) {
 	return &toreturn, nil
 }
 
-// UpdateFarmerPoint update points of user
-func UpdateFarmerPoint(farmer *Farmer) error {
-	db := GetConn()
-	defer db.Close()
-	db.Model(&Farmer{}).Where("launcher_id = ?", farmer.LauncherId).Update("points", farmer.Points)
-	errs := db.GetErrors()
-	if len(errs) > 0 {
-		return errs[0]
-	}
-	return nil
-}
-
 // GetFarmers get all farmer
 func GetFarmers() ([]*Farmer, error) {
 	db := GetConn()
@@ -66,7 +56,7 @@ func GetFarmers() ([]*Farmer, error) {
 	return toreturn, nil
 }
 
-// GetFarmers top farmer
+// GetTopFarmers get top farmer
 func GetTopFarmers() ([]*Farmer, error) {
 	db := GetConn()
 	defer db.Close()
@@ -83,7 +73,7 @@ func GetTopFarmers() ([]*Farmer, error) {
 	return toreturn, nil
 }
 
-// GetFarmers get all farmer
+// GetFarmersCount sum all farmer
 func GetFarmersCount() (int, error) {
 	db := GetConn()
 	defer db.Close()
@@ -94,4 +84,32 @@ func GetFarmersCount() (int, error) {
 		return toreturn, errs[0]
 	}
 	return toreturn, nil
+}
+
+// GetFarmerFromP2SingletonPuzzleHash get farmer from puzzlehash.
+func GetFarmerFromP2SingletonPuzzleHash(P2SingletonPuzzleHash string) (string, error) {
+	db := GetConn()
+	defer db.Close()
+	toreturn := Farmer{}
+	query := fmt.Sprintf("p2_singleton_puzzle_hash=\"%s\" AND is_pool_member=1", P2SingletonPuzzleHash)
+	db.Table("farmer").Where(query).Scan(&toreturn)
+	errs := db.GetErrors()
+	if len(errs) > 0 {
+		return "", errs[0]
+	}
+	return toreturn.P2SingletonPuzzleHash, nil
+}
+
+// GetFarmerFromRewardAdress get farmer from puzzlehash.
+func GetFarmerFromRewardAdress(rewardAdress string) (string, error) {
+	db := GetConn()
+	defer db.Close()
+	toreturn := Farmer{}
+	query := fmt.Sprintf("payout_instructions=\"%s\" AND is_pool_member=1", rewardAdress)
+	db.Table("farmer").Where(query).Scan(&toreturn)
+	errs := db.GetErrors()
+	if len(errs) > 0 {
+		return "", errs[0]
+	}
+	return toreturn.P2SingletonPuzzleHash, nil
 }

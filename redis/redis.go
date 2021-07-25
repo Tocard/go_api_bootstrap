@@ -32,7 +32,6 @@ func init() {
 	}()
 }
 func connect(DbNum int) {
-	fmt.Println(Host, Port)
 	Clis[DbNum] = redis.NewClient(&redis.Options{
 		Addr:        Host + ":" + strconv.Itoa(Port),
 		Password:    Password, // no password set
@@ -49,7 +48,6 @@ func WriteToRedis(DbNum int, key, value string) {
 
 func GetFromToRedis(DbNum int, key string) string {
 	val, err := Clis[DbNum].Get(key).Result()
-	fmt.Printf("result from redis %s\n", val)
 	if err == redis.Nil || err != nil {
 		return ""
 	}

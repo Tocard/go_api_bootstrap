@@ -11,14 +11,17 @@ import (
 
 // GetNetSpaceByLauncherId get netspace estimation from launcher_id.
 func GetNetSpaceByLauncherId(params martini.Params) (int, string) {
-	launcherId, _ := params["launcher_id"]
+	launcherId := params["launcher_id"]
+	if launcherId[0] == '0' && launcherId[1] == 'x' {
+		launcherId = launcherId[2:]
+	}
 	redisValue := redis.GetFromToRedis(0, launcherId)
 	redisNetspace := utils.StringToFloat(redisValue)
 	if redisNetspace != 0.0 {
 		d, _ := json.Marshal(redisNetspace)
 		return http.StatusOK, string(d)
 	}
-	u, err := data.GetNetSpaceByLauncherId(params["launcher_id"])
+	u, err := data.GetNetSpaceByLauncherId(launcherId)
 	if err != nil {
 		return http.StatusInternalServerError, err.Error()
 	}

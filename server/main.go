@@ -67,6 +67,7 @@ func server() *martini.ClassicMartini {
 		r.Get("/top", handlers.GetTopFarmers)
 		r.Get("/totalpoints", handlers.GetTotalPoint)
 		r.Get("/count", handlers.GetFarmersCount)
+		r.Get("/puzzle/:p2_singleton_puzzle_hash", handlers.GetFarmerFromP2SingletonPuzzleHash)
 		r.Get("/:launcher_id", handlers.GetFarmer)
 		r.Post("/:launcher_id", handlers.PostFarmerDiscord)
 	})
@@ -77,6 +78,10 @@ func server() *martini.ClassicMartini {
 		r.Get("/netspace/:launcher_id", handlers.GetNetSpaceByLauncherId)
 		r.Post("/:launcher_id", handlers.PostPartialDiscord)
 		r.Post("/update/solo_plot", handlers.PostPartialSoloplot)
+
+	})
+	app.Group("/block", func(r martini.Router) {
+		r.Post("/new_block_discord", handlers.PostNewBlock)
 
 	})
 

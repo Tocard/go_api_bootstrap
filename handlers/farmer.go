@@ -11,7 +11,11 @@ import (
 
 // GetFarmer get farmer.
 func GetFarmer(params martini.Params) (int, string) {
-	u, err := data.GetFarmer(params["launcher_id"])
+	launcherId := params["launcher_id"]
+	if launcherId[0] == '0' && launcherId[1] == 'x' {
+		launcherId = launcherId[2:]
+	}
+	u, err := data.GetFarmer(launcherId)
 	if err != nil {
 		return http.StatusInternalServerError, err.Error()
 	}
@@ -30,18 +34,18 @@ func GetFarmers() (int, string) {
 	return http.StatusOK, string(d)
 }
 
-// GetFarmers top get farmer.
+// GetTopFarmers get farmer.
 func GetTopFarmers() (int, string) {
 	redisTop := redis.GetFromToRedis(0, "topFarmer")
 	if redisTop != "" {
 		return http.StatusOK, string(redisTop)
-	}else{
+	} else {
 		u, err := data.GetTopFarmers()
 		if err != nil {
 			return http.StatusInternalServerError, err.Error()
 		}
 		d, _ := json.Marshal(u)
-		redis.WriteToRedis(0, "topFarmer",  string(d))
+		redis.WriteToRedis(0, "topFarmer", string(d))
 		return http.StatusOK, string(d)
 	}
 }
@@ -74,6 +78,16 @@ func PostFarmerDiscord(params martini.Params) (int, string) {
 			},
 		},
 	}, nil, "")
+	if err != nil {
+		return http.StatusInternalServerError, err.Error()
+	}
+	d, _ := json.Marshal(u)
+	return http.StatusOK, string(d)
+}
+
+// GetFarmerFromP2SingletonPuzzleHash get launcher_id from GetFarmerFromP2SingletonPuzzleHash.
+func GetFarmerFromP2SingletonPuzzleHash(params martini.Params) (int, string) {
+	u, err := data.GetFarmerFromP2SingletonPuzzleHash(params["p2_singleton_puzzle_hash"])
 	if err != nil {
 		return http.StatusInternalServerError, err.Error()
 	}

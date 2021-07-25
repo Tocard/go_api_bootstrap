@@ -3,7 +3,6 @@ package handlers
 import (
 	"chia_api/data"
 	"encoding/json"
-	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/nickname32/discordhook"
 	"net/http"
@@ -12,7 +11,11 @@ import (
 
 // GetPartial get Partial.
 func GetPartial(params martini.Params) (int, string) {
-	u, err := data.GetPartial(params["launcher_id"])
+	launcherId := params["launcher_id"]
+	if launcherId[0] == '0' && launcherId[1] == 'x' {
+		launcherId = launcherId[2:]
+	}
+	u, err := data.GetPartial(launcherId)
 	if err != nil {
 		return http.StatusInternalServerError, err.Error()
 	}
@@ -43,7 +46,11 @@ func GetPartials() (int, string) {
 
 // PostPartialDiscord post new partial on discord
 func PostPartialDiscord(params martini.Params) (int, string) {
-	u, err := data.GetPartial(params["launcher_id"])
+	launcherId := params["launcher_id"]
+	if launcherId[0] == '0' && launcherId[1] == 'x' {
+		launcherId = launcherId[2:]
+	}
+	u, err := data.GetPartial(launcherId)
 
 	wa, err := discordhook.NewWebhookAPI(861291081143681074, "dKHd1iYI71H0rc1rPM1vBNPawdE_uhodXSqKLNDb53wYXP_Y-EcR3zihdjKo3ullMEWX", true, nil)
 	if err != nil {
@@ -77,13 +84,12 @@ func PostPartialSoloplot(r *http.Request) (int, string) {
 		interval := 3600 / soloFarmer.Point
 		farmer, _ := data.GetFarmer(soloFarmer.LauncherId)
 		if farmer != nil {
-			fmt.Println(farmer.Points, soloFarmer.Point)
 			farmer.Points += soloFarmer.Point
 			err := data.UpdateFarmerPoint(farmer)
 			if err != nil {
 				return http.StatusServiceUnavailable, err.Error()
 			}
-			for i := 0; i < soloFarmer.Point; i++ {
+			for i := 0.0; i < soloFarmer.Point; i++ {
 				p := data.NewPArtial(soloFarmer.LauncherId, t+int64(interval), 1)
 				err := p.AddSoloPartial()
 				if err != nil {
